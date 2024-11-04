@@ -9,7 +9,7 @@ class User(Base):
     first_name = Column(String(50),nullable=False)
     last_name = Column(String(50),nullable=False)
     password = Column(String(255),nullable=False)
-    email = Column(String(255),nullable=False)
+    email = Column(String,unique=True,index=True,nullable=False)
     phone_number = Column(String(255),nullable=True)
     created = Column(Date,nullable=False)
     updated = Column(Date,nullable=False)
