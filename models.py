@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean,Column,Integer,String,Date,ForeignKey
+from sqlalchemy import Boolean,Column,Integer,String,Date,ForeignKey,Text
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -17,6 +17,7 @@ class User(Base):
     
     #relationships
     orders = relationship("Order",back_populates="user")
+    billing_address = relationship("BillingAddress",back_populates="user")
 
 class Order(Base):
     __tablename__ = "orders"
@@ -29,6 +30,35 @@ class Order(Base):
     
     #relationship
     user = relationship("User",back_populates="orders")
+    
+class BillingAddress(Base):
+    __tablename__ = "billingAddresses"
+    
+    book_id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey('users.id'),nullable=False)
+    addresse1 = Column(String(100))
+    addresse2 = Column(String(100),nullable=True)
+    city = Column(String(50))
+    state = Column(String(50))
+    zip_code = Column(String(50))
+    country = Column(String(50))
+    
+    #relationships
+    user = relationship("User",back_populates="billing_address")
+
+
+class Message(Base):
+    __tablename__ = "messages"
+    
+    id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey("users.id"),nullable=False)
+    message_content = Column(Text,nullable=True)
+    title = Column(String(100))
+    date = Column(Date,nullable=False)
+    
+    
+    
+    
     
     
     
