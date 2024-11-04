@@ -1,0 +1,24 @@
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]
+
+# Ignore environment variables
+.env
+
+# Ignore IDE/editor specific files
+.vscode/
+*.swp
+*.sublime-workspace
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore node_modules in a JavaScript project
+node_modules/
+
+#Ignore Settings.py
+settings.py
