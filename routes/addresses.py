@@ -67,4 +67,27 @@ async def get_billing_address(user_id:int,db:db_dependency):
     if not db_book:
         raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
     
-    return [ResponseBillingAddressBase.model_validate(billing_addresses) for billing_addresses in db_book]
+    return db_book
+
+
+@router.delete("/delete-billing-address/{user_id}/{book_id}",status_code=status.HTTP_200_OK)
+async def delete_address(user_id:int,book_id,db:db_dependency):
+    user_exist = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user_exist:
+        raise HTTPException(status_code=404,detail="User Not Found!")
+    
+    select_book = db.query(models.BillingAddress).filter(models.BillingAddress.user_id == user_id and models.BillingAddress.book_id == book_id).first()
+    if not select_book:
+        raise HTTPException(status_code=404,detail="No records was found!")
+    
+
+    db.delete(select_book)
+    db.commit()
+    
+    return {"Message" : "Book deleted successfully"}
+    
+    
+    
+    
+    
+    

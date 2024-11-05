@@ -1,10 +1,10 @@
-from fastapi import APIRouter,HTTPException,Depends,status
+from fastapi import APIRouter,HTTPException,status #,Depends
 from pydantic import BaseModel
 from typing import Annotated,Optional
 import helpers
 import models
-from database import SessonLocal
-from sqlalchemy.orm import Session
+# from database import SessonLocal
+# from sqlalchemy.orm import Session
 from datetime import datetime
 from helpers import get_db, db_dependency
 
@@ -77,7 +77,6 @@ async def get_user(user_id:int,db:db_dependency):
     return UserResponseBase.model_validate(user)
 
 
-
 @router.get("/getallusers",response_model=list[UserResponseBase],status_code=status.HTTP_200_OK)
 async def get_all_users(db:db_dependency):
     users = db.query(models.User).all()
@@ -100,4 +99,8 @@ async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependenc
     db.commit()
     db.refresh(user_exist)
     return UserResponseBase.model_validate(user_exist)
+
+
+
+
     

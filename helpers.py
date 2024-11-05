@@ -3,6 +3,7 @@ from fastapi import Depends
 from passlib.context import CryptContext
 from requests import Session
 from database import SessonLocal
+import models
 
 #hashing user password 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -21,3 +22,8 @@ def get_db():
         db.close()
         
 db_dependency= Annotated[Session, Depends(get_db)]
+
+
+def user_exist(user_id:int,db):
+    res = db.query(models.User).filter(models.User.id == user_id).first()
+    return res
