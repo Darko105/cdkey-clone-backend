@@ -8,17 +8,19 @@ class User(Base):
     id = Column(Integer,primary_key=True,index=True)
     first_name = Column(String(50),nullable=False)
     last_name = Column(String(50),nullable=False)
-    password = Column(String(255),nullable=False)
+    password = Column(String,nullable=False)
     email = Column(String,unique=True,index=True,nullable=False)
-    phone_number = Column(String(255),nullable=True)
+    phone_number = Column(String(10),nullable=True)
     created = Column(Date,nullable=False)
     updated = Column(Date,nullable=False)
-    staff = Column(Boolean,nullable=False)
+    staff = Column(Boolean,default=False,nullable=False)
+    is_active = Column(Boolean,default=True)
     
     #relationships
     orders = relationship("Order",back_populates="user")
     billing_address = relationship("BillingAddress",back_populates="user")
-
+    message = relationship("Message",back_populates="user")
+    
 class Order(Base):
     __tablename__ = "orders"
     
@@ -55,6 +57,8 @@ class Message(Base):
     message_content = Column(Text,nullable=True)
     title = Column(String(100))
     date = Column(Date,nullable=False)
+    
+    user = relationship("User", back_populates='message')
     
     
     
