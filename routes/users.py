@@ -61,12 +61,15 @@ async def create_user(user: UserCreateBase, db:db_dependency):
     db.refresh(db_user)
     return UserResponseBase.model_validate(db_user)
 
+
+
 @router.get("/users/{user_id}",status_code=status.HTTP_200_OK)
 async def get_user(user_id:int,db:db_dependency):
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if user is None:
         raise HTTPException(status_code=404,detail="User Not Found!")
     return UserResponseBase.model_validate(user)
+
 
 
 @router.get("/getallusers",response_model=list[UserResponseBase],status_code=status.HTTP_200_OK)
