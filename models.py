@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean,Column,Integer,String,Date,ForeignKey,Text
 from sqlalchemy.orm import relationship
 from database import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "users"
@@ -11,8 +12,8 @@ class User(Base):
     password = Column(String,nullable=False)
     email = Column(String,unique=True,index=True,nullable=False)
     phone_number = Column(String(10),nullable=True)
-    created = Column(Date,nullable=False)
-    updated = Column(Date,nullable=False)
+    created = Column(Date,nullable=False,default=datetime.now())
+    updated = Column(Date,nullable=False,default=datetime.now(),onupdate=datetime.now())
     staff = Column(Boolean,default=False,nullable=False)
     is_active = Column(Boolean,default=True)
     

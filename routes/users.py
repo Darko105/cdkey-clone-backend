@@ -15,10 +15,15 @@ class UserCreateBase(BaseModel):
     first_name: str
     last_name: str
     email: str
-    phone_number: Optional[str]
+    phone_number: Optional[str] = None
     password: str
-    created: Optional[datetime] = None
-    updated: Optional[datetime] = None
+
+class UpdateUserInformationBase(BaseModel):
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[str] = None
+    phone_number: Optional[str] = None
+    
 
 
 class UserResponseBase(BaseModel):
@@ -39,21 +44,22 @@ class UserResponseBase(BaseModel):
 
 db_dependency= Annotated[Session, Depends(get_db)]
 
-@router.post("/users/",status_code=status.HTTP_201_CREATED)
+@router.post("/users",status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreateBase, db:db_dependency):
     user_exist = db.query(models.User).filter(models.User.email == user.email).first()
     if user_exist:
         raise HTTPException(status_code=400, detail="Email already exist.!")
     
     hashed_password = helpers.hash_password(user.password)
+    current_time = datetime.now()
     db_user = models.User(
         first_name=user.first_name,
         last_name=user.last_name,
         email=user.email, 
         phone_number=user.phone_number,
         password=hashed_password,
-        created=datetime.now(),
-        updated=datetime.now(),
+        created=current_time,
+        updated=current_time,
     )
     
     db.add(db_user)
@@ -75,7 +81,23 @@ async def get_user(user_id:int,db:db_dependency):
 @router.get("/getallusers",response_model=list[UserResponseBase],status_code=status.HTTP_200_OK)
 async def get_all_users(db:db_dependency):
     users = db.query(models.User).all()
-    print(users)
     if not users:
         raise HTTPException(status_code=404,detail="not autherised or found!")
     return [UserResponseBase.model_validate(item) for item in users]
+
+@router.put("/update-user/{user_id}",status_code=status.HTTP_200_OK)
+async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependency):
+    print(user)
+    user_exist = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user_exist:
+        raise HTTPException(status_code=404,detail="User Not Found!")
+    update_data = user.dict(exclude_unset=True)
+    for key,value in update_data.items():
+        setattr(user_exist,key,value)
+    
+    user_exist.updated = datetime.now()
+
+    db.commit()
+    db.refresh(user_exist)
+    return UserResponseBase.model_validate(user_exist)
+    
