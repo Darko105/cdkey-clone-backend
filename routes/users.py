@@ -6,7 +6,7 @@ import models
 from database import SessonLocal
 from sqlalchemy.orm import Session
 from datetime import datetime
-from helpers import get_db
+from helpers import get_db, db_dependency
 
 
 router = APIRouter()
@@ -42,7 +42,7 @@ class UserResponseBase(BaseModel):
         
         
 
-db_dependency= Annotated[Session, Depends(get_db)]
+
 
 @router.post("/users",status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreateBase, db:db_dependency):
