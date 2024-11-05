@@ -66,7 +66,7 @@ async def create_user(user: UserCreateBase, db:db_dependency):
 @router.get("/users/{user_id}",status_code=status.HTTP_200_OK)
 async def get_user(user_id:int,db:db_dependency):
     user = db.query(models.User).filter(models.User.id == user_id).first()
-    if user is None:
+    if not user:
         raise HTTPException(status_code=404,detail="User Not Found!")
     return UserResponseBase.model_validate(user)
 
@@ -78,4 +78,4 @@ async def get_all_users(db:db_dependency):
     print(users)
     if not users:
         raise HTTPException(status_code=404,detail="not autherised or found!")
-    return users
+    return [UserResponseBase.model_validate(item) for item in users]
