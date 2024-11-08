@@ -18,7 +18,7 @@ models.Base.metadata.create_all(bind=engine)
 app.include_router(user_router)
 app.include_router(addresses_router)
 app.include_router(messages_router)
-app.include_router(rewords_router)
+app.include_router(rewards_router)
 
 
 
