@@ -81,12 +81,11 @@ async def get_user(user_id:int,db:db_dependency):
 async def get_all_users(db:db_dependency):
     users = db.query(models.User).all()
     if not users:
-        raise HTTPException(status_code=404,detail="not autherised or found!")
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
     return [UserResponseBase.model_validate(item) for item in users]
 
 @router.put("/update-user/{user_id}",status_code=status.HTTP_200_OK)
 async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependency):
-    print(user)
     user_exist = db.query(models.User).filter(models.User.id == user_id).first()
     if not user_exist:
         raise HTTPException(status_code=404,detail="User Not Found!")

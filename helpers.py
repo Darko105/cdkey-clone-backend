@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import Depends
+from fastapi import Depends,HTTPException
 from passlib.context import CryptContext
 from requests import Session
 from database import SessonLocal
@@ -25,5 +25,7 @@ db_dependency= Annotated[Session, Depends(get_db)]
 
 
 def user_exist(user_id:int,db):
-    res = db.query(models.User).filter(models.User.id == user_id).first()
-    return res
+    req = db.query(models.User).filter(models.User.id == user_id).first()
+    if not req:
+        raise HTTPException(status_code=404,detail="User Not Found!")
+    return req

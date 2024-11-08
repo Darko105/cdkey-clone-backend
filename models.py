@@ -9,8 +9,8 @@ class User(Base):
     id = Column(Integer,primary_key=True,index=True)
     first_name = Column(String(50),nullable=False)
     last_name = Column(String(50),nullable=False)
-    password = Column(String,nullable=False)
-    email = Column(String,unique=True,index=True,nullable=False)
+    password = Column(String(255),nullable=False)
+    email = Column(String(255),unique=True,index=True,nullable=False)
     phone_number = Column(String(10),nullable=True)
     created = Column(Date,nullable=False,default=datetime.now())
     updated = Column(Date,nullable=False,default=datetime.now(),onupdate=datetime.now())
@@ -21,6 +21,7 @@ class User(Base):
     orders = relationship("Order",back_populates="user",cascade="all, delete-orphan")
     billing_address = relationship("BillingAddress",back_populates="user",cascade="all, delete-orphan")
     message = relationship("Message",back_populates="user",cascade="all, delete-orphan")
+    reword = relationship("Reword",back_populates='user',cascade='all, delete-orphan')
     
 class Order(Base):
     __tablename__ = "orders"
@@ -54,12 +55,25 @@ class Message(Base):
     __tablename__ = "messages"
     
     id = Column(Integer,primary_key=True,index=True)
-    user_id = Column(Integer,ForeignKey("users.id",ondelete="CASADE",onupdate="CASCADE"))
+    user_id = Column(Integer,ForeignKey("users.id",ondelete="CASCADE",onupdate="CASCADE"))
     message_content = Column(Text,nullable=True)
     title = Column(String(100))
     date = Column(Date,nullable=False)
     
     user = relationship("User", back_populates='message')
+
+
+class Reword(Base):
+    __tablename__ = "rewords"
+
+    id = Column(Integer,primary_key=True,index=True)
+    user_id = Column(Integer,ForeignKey("users.id",ondelete='CASCADE',onupdate='CASCADE'))
+    coin_balance = Column(Integer,nullable=False,default=0)
+    
+    #relationshp
+    user = relationship("User",back_populates="reword")
+
+    
     
     
     
