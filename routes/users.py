@@ -6,7 +6,7 @@ import models
 # from database import SessonLocal
 # from sqlalchemy.orm import Session
 from datetime import datetime
-from helpers import get_db, db_dependency
+from helpers import get_db, db_dependency, user_exist
 
 
 router = APIRouter()
@@ -99,6 +99,21 @@ async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependenc
     db.refresh(user_exist)
     return UserResponseBase.model_validate(user_exist)
 
+
+
+@router.delete("/users/{user_id}/delete",status_code=status.HTTP_200_OK)
+async def delete_user(user_id:int,db:db_dependency):
+    user = user_exist(user_id,db)
+    
+    if not user:
+        raise HTTPException(status_code=400,detail="User Not Found!")
+    
+    db.delete(user)
+    db.commit()
+    
+    return {"message":"User Deleted Succesfully!"}
+    
+    
 
 
 
