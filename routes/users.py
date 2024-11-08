@@ -77,14 +77,14 @@ async def get_user(user_id:int,db:db_dependency):
     return UserResponseBase.model_validate(user)
 
 
-@router.get("/getallusers",response_model=list[UserResponseBase],status_code=status.HTTP_200_OK)
+@router.get("/users",response_model=list[UserResponseBase],status_code=status.HTTP_200_OK)
 async def get_all_users(db:db_dependency):
     users = db.query(models.User).all()
     if not users:
         raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
     return [UserResponseBase.model_validate(item) for item in users]
 
-@router.put("/update-user/{user_id}",status_code=status.HTTP_200_OK)
+@router.put("/users/{user_id}/update",status_code=status.HTTP_200_OK)
 async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependency):
     user_exist = db.query(models.User).filter(models.User.id == user_id).first()
     if not user_exist:

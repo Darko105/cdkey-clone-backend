@@ -24,7 +24,7 @@ class CreateMessageBase(BaseModel):
 
 
 
-@router.post("/message/{user_id}",status_code=status.HTTP_201_CREATED)
+@router.post("users/{user_id}/messages",status_code=status.HTTP_201_CREATED)
 async def create_message(user_id:int,data:CreateMessageBase,db:db_dependency):
     user_e = user_exist(user_id,db)
     if not user_e:
@@ -44,7 +44,7 @@ async def create_message(user_id:int,data:CreateMessageBase,db:db_dependency):
     return message_data
 
    
-@router.get("/message/all/user/{user_id}",status_code=status.HTTP_200_OK)
+@router.get("/users/{user_id}/messages",status_code=status.HTTP_200_OK)
 async def get_messages(user_id:int,db:db_dependency):
     user_e = user_exist(user_id,db)
     if not user_e:

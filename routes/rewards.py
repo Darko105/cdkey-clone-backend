@@ -20,7 +20,7 @@ class RewordResponseBase(BaseModel):
         
 
 
-@router.post("/reword/add/{user_id}",status_code=status.HTTP_200_OK)
+@router.post("/rewards/{user_id}/add",status_code=status.HTTP_200_OK)
 async def add_reword(user_id:int,reword:RewordCreationBase,db:db_dependency):
     user_exist(user_id,db)
     
@@ -36,7 +36,7 @@ async def add_reword(user_id:int,reword:RewordCreationBase,db:db_dependency):
     return set_reword
 
 
-@router.get("/rewords/{user_id}",status_code=status.HTTP_200_OK)
+@router.get("/rewards/{user_id}",status_code=status.HTTP_200_OK)
 async def get_rewords(user_id:int,db:db_dependency):
     user_e = user_exist(user_id,db)
     if not user_e:
@@ -48,7 +48,7 @@ async def get_rewords(user_id:int,db:db_dependency):
     
     return [RewordResponseBase.models_validate(item) for item in get_reword_db]
 
-@router.get("/reword/get-all",status_code=status.HTTP_200_OK)
+@router.get("/rewards",status_code=status.HTTP_200_OK)
 async def get_all_reword(db:db_dependency):
     get_rewords_table = db.query(models.Reword).all()
     if not get_rewords_table:
@@ -56,7 +56,7 @@ async def get_all_reword(db:db_dependency):
     
     return get_rewords_table
 
-@router.put("/reword/update/{user_id}",status_code=status.HTTP_201_CREATED)
+@router.put("/rewards/{user_id}/update",status_code=status.HTTP_201_CREATED)
 async def update_reword(user_id:int,db:db_dependency):
     user_exist(user_id,db)
     

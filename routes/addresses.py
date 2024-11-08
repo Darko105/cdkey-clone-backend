@@ -35,7 +35,7 @@ class ResponseBillingAddressBase(BaseModel):
         from_attributes = True
 
 
-@router.post("/add-billing-address/{user_id}",status_code=status.HTTP_201_CREATED)
+@router.post("/users/{user_id}/billing-address",status_code=status.HTTP_201_CREATED)
 async def create_billing_address(user_id:int,book:CreateBillingAddressBase,db:db_dependency):
     user_exits = db.query(models.User).filter(models.User.id == user_id).first()
     if not user_exits:
@@ -57,7 +57,7 @@ async def create_billing_address(user_id:int,book:CreateBillingAddressBase,db:db
 
     return ResponseBillingAddressBase.model_validate(db_user)
 
-@router.get("/get-billing-address/{user_id}",status_code=status.HTTP_200_OK)
+@router.get("/users/{user_id}/billing-address",status_code=status.HTTP_200_OK)
 async def get_billing_address(user_id:int,db:db_dependency):
     user_exist = db.query(models.User).filter(models.User.id == user_id).first()
     if not user_exist:
@@ -70,7 +70,7 @@ async def get_billing_address(user_id:int,db:db_dependency):
     return db_book
 
 
-@router.delete("/delete-billing-address/{user_id}/{book_id}",status_code=status.HTTP_200_OK)
+@router.delete("/users/{user_id}/billing-address/{book_id}",status_code=status.HTTP_200_OK)
 async def delete_address(user_id:int,book_id,db:db_dependency):
     user_exist = db.query(models.User).filter(models.User.id == user_id).first()
     if not user_exist:
