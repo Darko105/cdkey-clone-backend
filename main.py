@@ -10,6 +10,7 @@ from database import engine #, SessonLocal
 from routes.users import router as user_router
 from routes.addresses import router as addresses_router
 from routes.messages import router as messages_router
+from routes.rewords import router as rewords_router
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
@@ -17,6 +18,7 @@ models.Base.metadata.create_all(bind=engine)
 app.include_router(user_router)
 app.include_router(addresses_router)
 app.include_router(messages_router)
+app.include_router(rewords_router)
 
 
 
