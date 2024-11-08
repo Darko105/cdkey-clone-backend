@@ -24,7 +24,7 @@ app.include_router(messages_router)
 
     
         
-# Dummy : Route to create a user
+# Dummy : Route to create a user test
 # @app.post("/users/", response_model=UserResponse)
 # def create_user(user: UserCreate, db: Session = Depends(get_db)):
 #     hashed_password = hash_password(user.password)
