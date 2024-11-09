@@ -76,9 +76,8 @@ async def user_login(user:UserLoginBase,db:db_dependency):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user:
         raise HTTPException(status_code=404,detail="User Not Found!")
-    hashed_password = helpers.hash_password(user.password)
-    print(db_user.password+"\n"+hashed_password)
-    if helpers.verify_password(hashed_password,db_user.password):
+    
+    if helpers.verify_password(user.password,db_user.password):
         return UserResponseBase.model_validate(db_user)
     else:
         return HTTPException(status_code=400,detail="wrong email or password")
