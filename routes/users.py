@@ -73,10 +73,11 @@ async def create_user(user: UserCreateBase, db:db_dependency):
     
 @router.post("/users/login",status_code=status.HTTP_200_OK)
 async def user_login(user:UserLoginBase,db:db_dependency):
-    user_email_exist = db.query(models.User).filter(models.User.email == user.email).first()
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not user_email_exist:
         raise HTTPException(status_code=404,detail="User Not Found!")
-    return user_email_exist
+    hashed_password = helper.hash_password(user.password)
+    return db_user.password
 
 
 
