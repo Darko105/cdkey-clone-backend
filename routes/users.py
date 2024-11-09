@@ -23,6 +23,10 @@ class UpdateUserInformationBase(BaseModel):
     last_name: Optional[str] = None
     email: Optional[str] = None
     phone_number: Optional[str] = None
+
+class UserLoginBase(BaseModel):
+    email:str
+    password: str
     
 
 
@@ -66,6 +70,13 @@ async def create_user(user: UserCreateBase, db:db_dependency):
     db.commit()
     db.refresh(db_user)
     return UserResponseBase.model_validate(db_user)
+    
+@router.post("/users/login",status_code=status.HTTP_200_OK)
+async def user_login(user:UserLoginBase,db:db_dependency):
+    user_email_exist = db.query(models.User).filter(models.User.email == user.email).first()
+    if not user_email_exist:
+        raise HTTPException(status_code=404,detail="User Not Found!")
+    return user_email_exist
 
 
 
