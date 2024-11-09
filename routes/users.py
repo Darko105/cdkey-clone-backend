@@ -71,7 +71,7 @@ async def create_user(user: UserCreateBase, db:db_dependency):
     db.refresh(db_user)
     return UserResponseBase.model_validate(db_user)
     
-@router.get("/users/login",status_code=status.HTTP_200_OK)
+@router.post("/users/login",status_code=status.HTTP_200_OK)
 async def user_login(user:UserLoginBase,db:db_dependency):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if not db_user:
