@@ -79,7 +79,8 @@ async def user_login(user:UserLoginBase,db:db_dependency):
     hashed_password = helpers.hash_password(user.password)
     if db_user.password == hashed_password:
         return UserResponseBase.model_validate(db_user)
-    return HTTPException(status_code=400,detail="bad request")
+    else:
+        return HTTPException(status_code=400,detail="wrong email or password")
 
 
 
