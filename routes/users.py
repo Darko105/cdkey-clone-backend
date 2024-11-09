@@ -77,7 +77,9 @@ async def user_login(user:UserLoginBase,db:db_dependency):
     if not db_user:
         raise HTTPException(status_code=404,detail="User Not Found!")
     hashed_password = helpers.hash_password(user.password)
-    return db_user.password
+    if db_user.password == hashed_password:
+        return UserResponseBase.model_validate(db_user)
+    return HTTPException(status_code=400,detail="bad request")
 
 
 
