@@ -27,8 +27,7 @@ class UpdateUserInformationBase(BaseModel):
 class UserLoginBase(BaseModel):
     email:str
     password: str
-    
-
+   
 
 class UserResponseBase(BaseModel):
     id: int
@@ -70,6 +69,8 @@ async def create_user(user: UserCreateBase, db:db_dependency):
     db.commit()
     db.refresh(db_user)
     return UserResponseBase.model_validate(db_user)
+
+
     
 @router.post("/users/login",status_code=status.HTTP_200_OK)
 async def user_login(user:UserLoginBase,db:db_dependency):
