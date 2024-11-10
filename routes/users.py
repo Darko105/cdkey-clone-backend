@@ -81,7 +81,7 @@ async def user_login(user:UserLoginBase,db:db_dependency):
     if helpers.verify_password(user.password,db_user.password):
         return UserResponseBase.model_validate(db_user)
     else:
-        return HTTPException(status_code=400,detail="wrong email or password")
+        raise HTTPException(status_code=400,detail="wrong email or password")
 
 
 
