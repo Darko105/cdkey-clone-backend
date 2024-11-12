@@ -21,6 +21,10 @@ class MessageResponseBase(BaseModel):
 class CreateMessageBase(BaseModel):
     title:str | None = None
     message_content: str | None = None
+    
+class MessageDeleteBase(BaseModel):
+    id:int
+    user_id:int
 
 
 
@@ -54,3 +58,13 @@ async def get_messages(user_id:int,db:db_dependency):
         raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
     
     return get_messages_db
+
+@router.delete("/users/messages/delete",status_code=status.HTTP_200_OK)
+async def delete_user_message(message:MessageDeleteBase,db:db_dependency):
+    db_message = db.query(models.Message).filter(models.Message.user_id == message.user_id).first()
+    
+    if not db_message:
+        raise HTTPException(status_code=404,detail="Message was not found!")
+    db.delete(db_message)
+    db.commit()
+    return {"message":" Message was deleted Successfully! "}

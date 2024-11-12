@@ -43,6 +43,10 @@ class UserResponseBase(BaseModel):
     class Config:
         from_attributes = True
         
+class UserDeleteBase(BaseModel):
+    id:int
+    
+        
         
 
 
@@ -117,20 +121,27 @@ async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependenc
 
 
 
-@router.delete("/users/{user_id}/delete",status_code=status.HTTP_200_OK)
-async def delete_user(user_id:int,db:db_dependency):
-    user = user_exist(user_id,db)
+# @router.delete("/users/{user_id}/delete",status_code=status.HTTP_200_OK)
+# async def delete_user(user_id:int,db:db_dependency):
+#     user = user_exist(user_id,db)
     
-    if not user:
-        raise HTTPException(status_code=400,detail="User Not Found!")
+#     if not user:
+#         raise HTTPException(status_code=400,detail="User Not Found!")
     
-    db.delete(user)
+#     db.delete(user)
+#     db.commit()
+    
+#     return {"message":"User Deleted Succesfully!"}
+ 
+
+
+@router.delete("/users/delete",status_code=status.HTTP_200_OK)
+async def delete_user(user:UserDeleteBase,db:db_dependency):
+    db_user = db.query(models.User).filter(models.User.id == user.id).first()
+    if not db_user:
+        raise HTTPException(status_code=400,detail="bad request") #change detail later
+    db.delete(db_user)
     db.commit()
-    
-    return {"message":"User Deleted Succesfully!"}
-    
-    
-
-
-
+   
+    return {"message: ":"User was deleted succesfully!"}
     
