@@ -28,7 +28,7 @@ class MessageDeleteBase(BaseModel):
 
 
 
-@router.post("users/{user_id}/messages",status_code=status.HTTP_201_CREATED)
+@router.post("/users/{user_id}/messages",status_code=status.HTTP_201_CREATED)
 async def create_message(user_id:int,data:CreateMessageBase,db:db_dependency):
     user_e = user_exist(user_id,db)
     if not user_e:
