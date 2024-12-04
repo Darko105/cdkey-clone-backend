@@ -65,7 +65,7 @@ async def get_billing_address(user_id:int,db:db_dependency):
     
     db_book = db.query(models.BillingAddress).filter(models.BillingAddress.user_id == user_id).all()
     if not db_book:
-        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT)
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT,detail="NO ADDRESSES FOUND!!!")
     
     return db_book
 

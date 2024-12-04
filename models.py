@@ -6,7 +6,7 @@ from datetime import datetime
 class User(Base):
     __tablename__ = "users"
     
-    id = Column(Integer,primary_key=True,index=True)
+    id = Column(Integer,primary_key=True,autoincrement=True,index=True)
     first_name = Column(String(50),nullable=False)
     last_name = Column(String(50),nullable=False)
     password = Column(String(255),nullable=False)
@@ -27,10 +27,13 @@ class Order(Base):
     __tablename__ = "orders"
     
     id = Column(Integer,primary_key=True,index=True)
-    product_id = Column(String(255),nullable=True)
+    product_id = Column(String(255),nullable=False)
     user_id = Column(Integer,ForeignKey("users.id",ondelete="CASCADE",onupdate="CASCADE"))
     order_date = Column(Date,nullable=False)
-    total_amount = Column(Integer,nullable=False)
+    key = Column(String(255),nullable=False)
+    total_amount = Column(String(25),nullable=False)
+    product_img = Column(String(255),nullable=True)
+    product_name = Column(String(255),nullable=True)
     
     #relationship
     user = relationship("User",back_populates="orders")

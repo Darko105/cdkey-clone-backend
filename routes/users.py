@@ -23,6 +23,8 @@ class UpdateUserInformationBase(BaseModel):
     last_name: Optional[str] = None
     email: Optional[str] = None
     phone_number: Optional[str] = None
+    password: Optional[str] = None
+    
 
 class UserLoginBase(BaseModel):
     email:str
@@ -48,8 +50,6 @@ class UserDeleteBase(BaseModel):
     
         
         
-
-
 
 @router.post("/users",status_code=status.HTTP_201_CREATED)
 async def create_user(user: UserCreateBase, db:db_dependency):
@@ -88,6 +88,11 @@ async def user_login(user:UserLoginBase,db:db_dependency):
         raise HTTPException(status_code=400,detail="wrong email or password")
 
 
+@router.get("/users/count",status_code=status.HTTP_200_OK)
+async def count_all_users(db:db_dependency):
+    all_users_count = db.query(models.User).count()
+    
+    return {"total_users":all_users_count}
 
 @router.get("/users/{user_id}",status_code=status.HTTP_200_OK)
 async def get_user(user_id:int,db:db_dependency):
@@ -112,6 +117,12 @@ async def update_user(user_id:int,user:UpdateUserInformationBase,db:db_dependenc
     update_data = user.dict(exclude_unset=True)
     for key,value in update_data.items():
         setattr(user_exist,key,value)
+    
+    if user.password:
+        print(user.password)
+        hashed_password = helpers.hash_password(user.password)
+        user_exist.password = hashed_password
+        print('password changed',hashed_password,'  ',user_exist.password)
     
     user_exist.updated = datetime.now()
 
